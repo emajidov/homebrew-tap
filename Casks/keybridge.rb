@@ -16,14 +16,20 @@ cask "keybridge" do
 
   app "KeyBridge.app"
 
+  # KeyBridge is ad-hoc signed and not notarized; clear the quarantine flag so it opens without a Gatekeeper block.
+  postflight do
+    system_command "/usr/bin/xattr",
+                   args: ["-dr", "com.apple.quarantine", "#{appdir}/KeyBridge.app"]
+  end
+
   uninstall quit: "io.github.keybridge.KeyBridge"
 
   zap trash: "~/Library/Preferences/io.github.keybridge.KeyBridge.plist"
 
   caveats <<~EOS
-    KeyBridge is not notarized by Apple. The first time you open it, macOS blocks it:
-    open System Settings → Privacy & Security and click "Open Anyway".
+    KeyBridge is not notarized by Apple. This cask removes the quarantine flag so it opens
+    without a Gatekeeper warning.
 
-    Then allow KeyBridge under System Settings → Privacy & Security → Accessibility.
+    Allow KeyBridge under System Settings → Privacy & Security → Accessibility.
   EOS
 end
