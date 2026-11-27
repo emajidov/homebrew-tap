@@ -1,0 +1,33 @@
+name: Update KeyBridge cask
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update cask to the latest KeyBridge release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG=$(gh release view -R emajidov/keybridge --json tagName --jq .tagName)
+          VERSION="${TAG#v}"
+          CURRENT=$(sed -n 's/^  version "\(.*\)"$/\1/p' Casks/keybridge.rb)
+          if [ "$VERSION" = "$CURRENT" ]; then
+            echo "Cask already at $VERSION"
+            exit 0
+          fi
+          SHA=$(curl -fsSL "https://github.com/emajidov/keybridge/releases/download/$TAG/KeyBridge.dmg" | sha256sum | cut -d' ' -f1)
+          sed -i "s/^  version \".*\"$/  version \"$VERSION\"/; s/^  sha256 \".*\"$/  sha256 \"$SHA\"/" Casks/keybridge.rb
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "keybridge $VERSION"
+          git push
