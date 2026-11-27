@@ -4,7 +4,7 @@ cask "keybridge" do
 
   url "https://github.com/emajidov/keybridge/releases/download/v#{version}/KeyBridge.dmg"
   name "KeyBridge"
-  desc "Use Windows and Linux Ctrl keyboard shortcuts on a Mac"
+  desc "Remaps Windows and Linux Ctrl keyboard shortcuts to Command shortcuts"
   homepage "https://emajidov.github.io/keybridge/"
 
   livecheck do
