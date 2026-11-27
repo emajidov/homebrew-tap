@@ -4,7 +4,7 @@ cask "keybridge" do
 
   url "https://github.com/emajidov/keybridge/releases/download/v#{version}/KeyBridge.dmg"
   name "KeyBridge"
-  desc "Use Windows and Linux Ctrl keyboard shortcuts on macOS"
+  desc "Use Windows and Linux Ctrl keyboard shortcuts on a Mac"
   homepage "https://emajidov.github.io/keybridge/"
 
   livecheck do
@@ -12,7 +12,7 @@ cask "keybridge" do
     strategy :github_latest
   end
 
-  depends_on macos: ">= :ventura"
+  depends_on macos: :ventura
 
   app "KeyBridge.app"
 
