@@ -17,9 +17,11 @@ cask "keybridge" do
   app "KeyBridge.app"
 
   # KeyBridge is ad-hoc signed and not notarized; clear the quarantine flag so it opens without a Gatekeeper block.
-  postflight do
-    system_command "/usr/bin/xattr",
-                   args: ["-dr", "com.apple.quarantine", "#{appdir}/KeyBridge.app"]
+  preflight_steps do
+    run "/usr/bin/xattr",
+        args:           ["-dr", "com.apple.quarantine", "KeyBridge.app"],
+        chdir:          ".",
+        writable_paths: ["KeyBridge.app"]
   end
 
   uninstall quit: "io.github.keybridge.KeyBridge"
